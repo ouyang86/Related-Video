@@ -95,15 +95,15 @@ def fetchtv(start, end, limit = None):
 
 #simplify candidate film/TV Show name
 def simName(name):
-    refine = deParan.sub(u'', name)
-    if len(re.findall('[\w\d\']+', refine)) > 2: refine = deThe.sub(u'', refine)
-    refine = refine.strip()
+    refine = deParan.sub(u'', name)                           #remove paranthesis in the end of name
+    if len(re.findall('[\w\d\']+', refine)) > 2: refine = deThe.sub(u'', refine)     #remove 'the' in the front for long names
+    refine = refine.strip() 
     return refine
 
 #film/TV show name initial detection
 def checkName(name, reference):
     if name not in reference: return False
-    for item in re.findall('[\w\d\'/]+', name):
+    for item in re.findall('[\w\d\'/]+', name):               #make sure each word in candidate name is a word in video description
         if item not in re.findall('[\w\d\'/]+', reference): return False
     return True
     
@@ -144,7 +144,7 @@ class video:
                     continue
                 clean = set()
                 include = False
-                for item in self.tag['movie']:                                        #detecting the longest/maximal matching film name from text content
+                for item in self.tag['movie']:          #detecting the longest/maximal matching film name from text content
                     if simName(item) in name:
                         clean.add(item)
                     else:
@@ -159,7 +159,7 @@ class video:
             if hasattr(name, 'contents'):
                 name = name.contents[0]
             refine = simName(name)
-            if len(refine) <= 1 or refine.lower() in allStopWords:                 #remove single word tv show name that is a stop word
+            if len(refine) <= 1 or refine.lower() in allStopWords:      #remove single word tv show name that is a stop word
                 continue
             t = checkName(refine, self.title)                                      #search video title
             c = checkName(refine, self.content)                                    #search video description
@@ -169,7 +169,7 @@ class video:
                     continue
                 clean = set()
                 include = False
-                for item in self.tag['tv']:                                        #detecting the longest/maximal matching tv show name from text content
+                for item in self.tag['tv']:      #detecting the longest/maximal matching tv show name from text content
                     if simName(item) in name:
                         clean.add(item)
                     else:
@@ -250,23 +250,23 @@ def relate(videoset, start = 0, end = len(videoset)):
 def main():
     wikisource = 'http://en.wikipedia.org'
     allStopWords={'about':1, 'above':1, 'after':1, 'again':1, 'against':1, 'all':1, 'am':1, 'an':1, 'and':1, 'any':1, 'are':1, 'arent':1, 'as':1, 'at':1, 'be':1, 'because':1, 'been':1, 'before':1, 'being':1, 'below':1, 'between':1, 'both':1, 'but':1, 'by':1, 'cant':1, 'cannot':1, 'could':1, 'couldnt':1, 'did':1, 'didnt':1, 'do':1, 'does':1, 'doesnt':1, 'doing':1, 'dont':1, 'down':1, 'during':1, 'each':1, 'few':1, 'for':1, 'from':1, 'further':1, 'had':1, 'hadnt':1, 'has':1, 'hasnt':1, 'have':1, 'havent':1, 'having':1, 'he':1, 'hed':1, 'hell':1, 'hes':1, 'her':1, 'here':1, 'heres':1, 'hers':1, 'herself':1, 'him':1, 'himself':1, 'his':1, 'how':1, 'hows':1, 'i':1, 'id':1, 'ill':1, 'im':1, 'ive':1, 'if':1, 'in':1, 'into':1, 'is':1, 'isnt':1, 'it':1, 'its':1, 'its':1, 'itself':1, 'lets':1, 'me':1, 'more':1, 'most':1, 'mustnt':1, 'my':1, 'myself':1, 'no':1, 'nor':1, 'not':1, 'of':1, 'off':1, 'on':1, 'once':1, 'only':1, 'or':1, 'other':1, 'ought':1, 'our':1, 'ours ':1, 'ourselves':1, 'out':1, 'over':1, 'own':1, 'same':1, 'shant':1, 'she':1, 'shed':1, 'shell':1, 'shes':1, 'should':1, 'shouldnt':1, 'so':1, 'some':1, 'such':1, 'than':1, 'that':1, 'thats':1, 'the':1, 'their':1, 'theirs':1, 'them':1, 'themselves':1, 'then':1, 'there':1, 'theres':1, 'these':1, 'they':1, 'theyd':1, 'theyll':1, 'theyre':1, 'theyve':1, 'this':1, 'those':1, 'through':1, 'to':1, 'too':1, 'under':1, 'until':1, 'up':1, 'very':1, 'was':1, 'wasnt':1, 'we':1, 'wed':1, 'well':1, 'were':1, 'weve':1, 'were':1, 'werent':1, 'what':1, 'whats':1, 'when':1, 'whens':1, 'where':1, 'wheres':1, 'which':1, 'while':1, 'who':1, 'whos':1, 'whom':1, 'why':1, 'whys':1, 'with':1, 'wont':1, 'would':1, 'wouldnt':1, 'you':1, 'youd':1, 'youll':1, 'youre':1, 'youve':1, 'your':1, 'yours':1, 'yourself':1, 'yourselves':1}
-    deParan = re.compile(r'\(.+\)')
-    deThe = re.compile(r'^[ ]*[Tt]he[ ]+')
-    deA = re.compile(r'^[ ]*[Aa][n]?[ ]+')
-    deShow = re.compile(r'[ ]+[Ss]how[ ]*$')
+    deParan = re.compile(r'\(.+\)')                 #remove paranthesis following name
+    deThe = re.compile(r'^[ ]*[Tt]he[ ]+')          #remove 'the' in front of name
+    deA = re.compile(r'^[ ]*[Aa][n]?[ ]+')          #remove 'a' in front of a name
+    deShow = re.compile(r'[ ]+[Ss]how[ ]*$')        #remove 'show' in the end of a tv show name
 
-    os.chdir('C:\\Users\\Aaron\\Google Drive\\Related Vedio')
+    os.chdir('C:\\Users\\Aaron\\Google Drive\\Related Vedio')      #changing working directory to the address of input data
 
-    filmactor = fetchactor('male', 'film')
+    filmactor = fetchactor('male', 'film')            #build up American actor vocabulary 
     tvactor = fetchactor('male', 'television')
     filmactress = fetchactor('female', 'film')
     tvactress = fetchactor('female', 'television')
-    film = fetchfilm(1980, 2015)
-    tv = fetchtv(1980, 2010)
+    film = fetchfilm(1980, 2015)                       #build up American movie vocabulary
+    tv = fetchtv(1980, 2010)                           #build up American tv show vocabulary
 
-    jsondata = readVideo('CodeAssignmentDataSet.json')
-    videoset = addTag(jsondata)
-    relate(videoset)
+    jsondata = readVideo('CodeAssignmentDataSet.json')   #read intput data
+    videoset = addTag(jsondata)                          #assigning tags to each input video
+    relate(videoset)                                     #create output file
 
 if __name__ == '__main__':
     main()
