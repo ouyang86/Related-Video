@@ -27,3 +27,6 @@ magzine, film critics, directors, etc. We can use wikipedia data to help the pro
 Then we can assign more tags to each of the youtube videos. The more tags we assign, the more information are extracted, and the
 better the video clustering algorithm will be.
 
+Another possible improvement is detecting words with high TD-IDF score of each video, and use them as tags. The key idea of 
+the algorithm is extrating important features for each video, and compare how much in common for each pair of video. 
+
