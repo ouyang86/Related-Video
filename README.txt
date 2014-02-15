@@ -16,6 +16,7 @@ the complete directory. It takes about 6 minutes for the program to run. After t
 in 'tag.csv' and list of top 3 related video of each video
 
 
+Algorithm Description:
 Step1.
 By scrapping data from wikipedia, the program build up vocabulary on famous American actors, movies, and television shows.
 
